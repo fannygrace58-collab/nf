@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Portfolio System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #1e3a8a;
+  --blue-light: #3b82f6;
+  --green: #10b981;
+  --orange: #f59e0b;
+  --purple: #8b5cf6;
+  --bg: #f3f4f6;
+  --white: #ffffff;
+  --dark: #1f2937;
+  --gray: #6b7280;
+  --border: #e5e7eb;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background: var(--bg); color: var(--dark); line-height: 1.6; }
+a { text-decoration: none; color: inherit; cursor: pointer; }
+ul { list-style: none; }
+.hidden { display: none !important; }
+
+/* NAV */
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background: var(--white); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+.nav .logo { font-size: 1.4rem; font-weight: 700; color: var(--blue); }
+.nav ul { display: flex; gap: 1.5rem; align-items: center; }
+.nav a { font-weight: 500; }
+.btn-login { color: var(--blue); border: 2px solid var(--blue); padding: 0.4rem 1rem; border-radius: 6px; }
+.btn-register { background: var(--blue); color: white; padding: 0.4rem 1rem; border-radius: 6px; }
+
+/* HERO SLIDER */
+.hero { height: 80vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; color: white; overflow: hidden; }
+.hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; }
+.hero-slide.active { opacity: 1; }
+.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 58, 138, 0.75); z-index: 1; }
+.hero-content { position: relative; z-index: 2; padding: 0 5%; max-width: 900px; }
+.hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+.hero p { font-size: 1.2rem; margin-bottom: 2rem; }
+.btn-primary { background: var(--green); color: white; padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 1rem; transition: 0.3s; display: inline-block; }
+.btn-primary:hover { background: #059669; transform: translateY(-2px); }
+
+/* SECTIONS */
+.section { padding: 5rem 5%; text-align: center; background: white; }
+.section h2 { font-size: 2.2rem; color: var(--blue); margin-bottom: 3rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+.card { background: var(--bg); border-radius: 12px; border: 1px solid var(--border); transition: 0.3s; overflow: hidden; text-align: left; }
+.card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); background: white; }
+.card img { width: 100%; height: 180px; object-fit: cover; }
+.card-body { padding: 1.5rem; }
+.card-body h3 { margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--blue); }
+.card-body p { font-size: 0.9rem; color: var(--gray); }
+
+/* STEPS */
+.steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; max-width: 1000px; margin: 0 auto; }
+.step { background: white; padding: 2rem 1.5rem; border-radius: 12px; width: 180px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-top: 4px solid var(--blue-light); }
+.step-num { background: var(--blue); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 0 auto 1rem; }
+
+/* AUTH */
+.auth-box { max-width: 420px; margin: 4rem auto; background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+.auth-box h2 { text-align: center; color: var(--blue); margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: var(--blue-light); }
+.btn-submit { width: 100%; padding: 0.9rem; background: var(--blue); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-top: 0.5rem; }
+.btn-submit:hover { background: #152c6b; }
+.auth-toggle { text-align: center; margin-top: 1rem; font-size: 0.9rem; }
+.auth-toggle a { color: var(--blue-light); font-weight: 600; }
+.demo-info { margin-top: 1.2rem; padding: 1rem; background: #eff6ff; border-radius: 8px; font-size: 0.82rem; color: var(--gray); line-height: 1.7; }
+
+/* DASHBOARD */
+.dash { display: flex; min-height: 100vh; }
+.sidebar { width: 250px; background: white; border-right: 1px solid var(--border); position: fixed; height: 100vh; overflow-y: auto; transition: 0.3s; z-index: 100; }
+.sidebar-head { padding: 1.5rem; border-bottom: 1px solid var(--border); text-align: center; }
+.sidebar-head h3 { color: var(--blue); font-size: 1.1rem; }
+.role-badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: white; margin-top: 0.4rem; text-transform: uppercase; }
+.role-badge.student { background: var(--green); }
+.role-badge.teacher { background: var(--orange); }
+.role-badge.admin { background: var(--purple); }
+.sidebar ul { padding: 0.8rem 0; }
+.sidebar li a { display: flex; gap: 0.8rem; align-items: center; padding: 0.8rem 1.5rem; font-weight: 500; border-left: 4px solid transparent; transition: 0.2s; cursor: pointer; }
+.sidebar li a:hover, .sidebar li a.active { background: #eff6ff; color: var(--blue); border-left-color: var(--blue); }
+.sidebar li a.logout { color: #ef4444; }
+.sidebar li a.logout:hover { background: #fef2f2; border-left-color: #ef4444; }
+.main { flex: 1; margin-left: 250px; padding: 1.5rem; }
+.topbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem; gap: 1rem; }
+.menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; }
+.search-box { display: flex; flex: 1; max-width: 400px; }
+.search-box input { flex: 1; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px 0 0 8px; outline: none; }
+.search-box button { padding: 0.5rem 1rem; background: var(--blue); color: white; border: none; border-radius: 0 8px 8px 0; cursor: pointer; }
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.user-info { display: flex; align-items: center; gap: 0.6rem; font-weight: 500; }
+.user-info img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+
+/* DASHBOARD CONTENT */
+.page-title { font-size: 1.6rem; color: var(--blue); margin-bottom: 1.5rem; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+.stat { background: white; padding: 1.3rem; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--blue-light); }
+.stat h3 { font-size: 1.8rem; }
+.stat p { color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.table-wrap { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 1.5rem; }
+.table-wrap h3 { margin-bottom: 1rem; color: var(--blue); }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+th { background: var(--bg); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; color: var(--gray); }
+.btn-sm { padding: 0.35rem 0.7rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.82rem; color: white; font-weight: 500; margin-right: 0.3rem; }
+.btn-view { background: var(--blue-light); }
+.btn-edit { background: var(--orange); }
+.btn-del { background: #ef4444; }
+.btn-ok { background: var(--green); }
+
+/* PORTFOLIO */
+.pf-header { background: linear-gradient(135deg, var(--blue), var(--blue-light)); color: white; padding: 3rem; border-radius: 12px; text-align: center; margin-bottom: 2rem; position: relative; overflow: hidden; }
+.pf-header img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid white; margin-bottom: 1rem; object-fit: cover; }
+.pf-header h1 { font-size: 2.2rem; }
+.pf-section { margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.pf-section h2 { font-size: 1.3rem; color: var(--blue); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.tag { background: var(--bg); padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.88rem; border: 1px solid var(--border); }
+
+/* MODAL */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+.modal.active { display: flex; }
+.modal-box { background: white; padding: 2rem; border-radius: 12px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+.modal-box h3 { color: var(--blue); margin-bottom: 1rem; }
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav ul { display: none; }
+  .hero h1 { font-size: 2rem; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.active { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .menu-toggle { display: block; }
+  .search-box { display: none; }
+  .topbar-right .user-info span { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================
+     PUBLIC VIEW (Home, Login, Register)
+     ============================ -->
+<div id="publicView">
+  <nav class="nav">
+    <div class="logo">School Portfolio System</div>
+    <ul>
+      <li><a onclick="showHome()">Home</a></li>
+      <li><a onclick="showHome()">About</a></li>
+      <li><a onclick="showHome()">Features</a></li>
+      <li><a onclick="showHome()">Contact</a></li>
+      <li><a class="btn-login" onclick="showLogin()">Login</a></li>
+      <li><a class="btn-register" onclick="showRegister()">Register</a></li>
+    </ul>
+  </nav>
+
+  <!-- Home Page -->
+  <div id="homePage">
+    <!-- Hero with Sliding Backgrounds -->
+    <div class="hero">
+      <div class="hero-slide" style="background-image:url('images/1.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/2.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/3.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/4.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/5.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/6.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/7.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/8.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/9.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/10.jpg')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Showcase Your Talent, Build Your Future</h1>
+        <p>A digital platform for students to showcase projects, skills, achievements, and certificates. Teachers give feedback, admins manage the system.</p>
+        <button class="btn-primary" onclick="showRegister()">Get Started</button>
+      </div>
+    </div>
+
+    <!-- Features Section with Images -->
+    <div class="section">
+      <h2>System Features</h2>
+      <div class="grid" id="featuresGrid"></div>
+    </div>
+
+    <!-- About Section -->
+    <div class="section" style="background:var(--bg);">
+      <h2>About the System</h2>
+      <p style="max-width: 800px; margin: 0 auto; color: var(--gray); font-size: 1.05rem;">The School Portfolio System empowers students to build a professional digital presence. It bridges academic work and real-world presentation, allowing teachers to assess and guide, and administrators to oversee the entire process.</p>
+    </div>
+
+    <!-- How It Works -->
+    <div class="section">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><h4>Register/Login</h4></div>
+        <div class="step"><div class="step-num">2</div><h4>Create Portfolio</h4></div>
+        <div class="step"><div class="step-num">3</div><h4>Add Projects</h4></div>
+        <div class="step"><div class="step-num">4</div><h4>Teacher Reviews</h4></div>
+        <div class="step"><div class="step-num">5</div><h4>Portfolio Published</h4></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Page Container -->
+  <div id="authPage" class="hidden"></div>
+</div>
+
+<!-- ============================
+     DASHBOARD VIEW
+     ============================ -->
+<div id="dashView" class="hidden">
+  <div class="dash">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <h3>School Portfolio</h3>
+        <span class="role-badge" id="roleBadge">Student</span>
+      </div>
+      <ul id="sidebarMenu"></ul>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search..." oninput="filterTables()">
+          <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="topbar-right">
+          <i class="fas fa-bell" style="font-size:1.2rem; color:var(--gray);"></i>
+          <div class="user-info">
+            <img id="topAvatar" src="" alt="">
+            <span id="topName">User</span>
+          </div>
+        </div>
+      </div>
+      <div id="content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     MODAL FOR CRUD
+     ============================ -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle">Add Item</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ============================
+   IMAGE MAPPING (Based on your wireframe)
+   ============================ */
+const imageMap = {
+    home: 'images/1.jpg',
+    student: 'images/2.jpg',
+    teacher: 'images/3.jpg',
+    admin: 'images/4.jpg',
+    projects: 'images/5.jpg',
+    certificates: 'images/6.jpg',
+    achievements: 'images/7.jpg',
+    classroom: 'images/8.jpg',
+    portfolio: 'images/9.jpg',
+    default: 'images/10.jpg'
+};
+
+/* ============================
+   SIMULATED DATABASE (localStorage)
+   ============================ */
+const DB = {
+  data: null,
+  init() {
+    const saved = localStorage.getItem('spsData');
+    if (saved) { this.data = JSON.parse(saved); return; }
+    this.data = {
+      users: [
+        { id: 1, name: 'Admin User', email: 'admin@school.com', password: 'password123', role: 'admin', phone: '', gender: 'Male', about: 'System Administrator', avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=8b5cf6&color=fff' },
+        { id: 2, name: 'John Teacher', email: 'teacher@school.com', password: 'password123', role: 'teacher', phone: '', gender: 'Male', about: 'Mathematics Teacher', avatar: 'https://ui-avatars.com/api/?name=John+Teacher&background=f59e0b&color=fff', dept: 'Mathematics' },
+        { id: 3, name: 'Jane Student', email: 'student@school.com', password: 'password123', role: 'student', phone: '', gender: 'Female', about: 'Passionate web developer.', avatar: 'https://ui-avatars.com/api/?name=Jane+Student&background=10b981&color=fff', class: 'SS3', skills: ['HTML','CSS','JavaScript','PHP'] }
+      ],
+      projects: [
+        { id: 1, studentId: 3, title: 'School Management System', desc: 'Web-based system to manage students.', category: 'Web Development', tech: 'PHP, MySQL, JS', date: '2026-05-15', status: 'Published' },
+        { id: 2, studentId: 3, title: 'E-Commerce Website', desc: 'A fully functional online store.', category: 'Web Development', tech: 'React, Node.js', date: '2026-06-20', status: 'Pending' }
+      ],
+      achievements: [
+        { id: 1, studentId: 3, title: 'Best Web Developer', desc: 'Awarded for outstanding performance.', org: 'APEC College', date: '2026-07-15' }
+      ],
+      certificates: [
+        { id: 1, studentId: 3, name: 'Certificate of Achievement', org: 'APEC College', date: '2026-07-15' }
+      ],
+      grades: [
+        { id: 1, studentId: 3, teacherId: 2, subject: 'Mathematics', score: 95, grade: 'A', semester: 'Semester 1', year: '2025-2026', comment: 'Excellent performance' }
+      ],
+      feedback: [
+        { id: 1, projectId: 1, teacherId: 2, comment: 'Great work on the database design.', grade: 'A', date: '2026-05-20' }
+      ]
+    };
+    this.save();
+  },
+  save() { localStorage.setItem('spsData', JSON.stringify(this.data)); },
+  get() { return this.data; }
+};
+DB.init();
+
+let currentUser = null;
+
+/* ============================
+   FEATURE CARDS GENERATION
+   ============================ */
+function buildFeatures() {
+    const features = [
+        { img: imageMap.student, title: 'Student Portfolio', desc: 'Create and manage your digital portfolio showcasing your academic journey.' },
+        { img: imageMap.projects, title: 'Projects', desc: 'Upload and showcase your academic and personal projects with technologies used.' },
+        { img: imageMap.achievements, title: 'Achievements', desc: 'Record your awards, recognitions, and competition wins.' },
+        { img: imageMap.certificates, title: 'Certificates', desc: 'Store and display your professional and academic certificates.' },
+        { img: imageMap.classroom, title: 'Grades', desc: 'View your academic performance and teacher assessments.' },
+        { img: imageMap.teacher, title: 'Teacher Feedback', desc: 'Receive constructive feedback on your work from teachers.' },
+        { img: imageMap.portfolio, title: 'Public Portfolio', desc: 'Share your portfolio with a unique public link.' }
+    ];
+    document.getElementById('featuresGrid').innerHTML = features.map(f => `
+        <div class="card">
+            <img src="${f.img}" alt="${f.title}" onerror="this.src='https://via.placeholder.com/400x180/1e3a8a/ffffff?text=${encodeURIComponent(f.title)}'">
+            <div class="card-body">
+                <h3>${f.title}</h3>
+                <p>${f.desc}</p>
+            </div>
+        </div>
+    `).join('');
+}
+buildFeatures();
+
+/* ============================
+   HERO SLIDER LOGIC
+   ============================ */
+let slideIndex = 0;
+function rotateSlides() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length === 0) return;
+    slides.forEach(s => s.classList.remove('active'));
+    slideIndex = (slideIndex + 1) % slides.length;
+    slides[slideIndex].classList.add('active');
+}
+setInterval(rotateSlides, 5000);
+document.querySelector('.hero-slide').classList.add('active');
+
+/* ============================
+   PUBLIC PAGE NAVIGATION
+   ============================ */
+function showHome() {
+  document.getElementById('publicView').classList.remove('hidden');
+  document.getElementById('dashView').classList.add('hidden');
+  document.getElementById('homePage').classList.remove('hidden');
+  document.getElementById('authPage').classList.add('hidden');
+}
+
+function showLogin() {
+  document.getElementById('homePage').classList.add('hidden');
+  document.getElementById('authPage').classList.remove('hidden');
+  document.getElementById('authPage').innerHTML = `
+    <div class="auth-box">
+      <h2>Login</h2>
+      <form onsubmit="doLogin(event)">
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required></div>
+        <button class="btn-submit" type="submit">Login</button>
+      </form>
+      <div class="auth-toggle">No account? <a onclick="showRegister()">Register</a></div>
+      <div class="demo-info">
+        <strong>Demo Accounts (password: password123):</strong><br>
+        Student: student@school.com<br>
+        Teacher: teacher@school.com<br>
+        Admin: admin@school.com
+      </div>
+    </div>`;
+}
+
+function showRegister() {
+  document.getElementById('homePage').classList.add('hidden');
+  document.getElementById('authPage').classList.remove('hidden');
+  document.getElementById('authPage').innerHTML = `
+    <div class="auth-box">
+      <h2>Register</h2>
+      <form onsubmit="doRegister(event)">
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" required></div>
+        <div class="form-group"><label>Email</label><input type="email" id="regEmail" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPass" required></div>
+        <div class="form-group"><label>Confirm Password</label><input type="password" id="regConfirm" required></div>
+        <div class="form-group"><label>Role</label>
+          <select id="regRole" required>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+        </div>
+        <button class="btn-submit" type="submit">Register</button>
+      </form>
+      <div class="auth-toggle">Have account? <a onclick="showLogin()">Login</a></div>
+    </div>`;
+}
+
+/* ============================
+   AUTH LOGIC
+   ============================ */
+function doLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const user = DB.get().users.find(u => u.email === email && u.password === pass);
+  if (!user) { alert('Invalid email or password. Try the demo accounts.'); return; }
+  currentUser = user;
+  enterDashboard();
+}
+
+function doRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const confirm = document.getElementById('regConfirm').value;
+  const role = document.getElementById('regRole').value;
+  
+  if (pass !== confirm) { alert('Passwords do not match.'); return; }
+  const db = DB.get();
+  if (db.users.find(u => u.email === email)) { alert('Email already registered.'); return; }
+  
+  const newUser = {
+    id: Date.now(),
+    name, email, password: pass, role,
+    phone: '', gender: '', about: 'New user on the platform.',
+    avatar: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=random',
+    class: role === 'student' ? 'SS1' : undefined,
+    dept: role === 'teacher' ? 'General' : undefined,
+    skills: []
+  };
+  db.users.push(newUser);
+  DB.save();
+  alert('Registration successful! Please login.');
+  showLogin();
+}
+
+/* ============================
+   DASHBOARD ENTRY
+   ============================ */
+function enterDashboard() {
+  document.getElementById('publicView').classList.add('hidden');
+  document.getElementById('dashView').classList.remove('hidden');
+  
+  // Set sidebar role badge
+  document.getElementById('roleBadge').textContent = currentUser.role;
+  document.getElementById('roleBadge').className = 'role-badge ' + currentUser.role;
+  
+  // Set topbar user info
+  document.getElementById('topName').textContent = currentUser.name;
+  document.getElementById('topAvatar').src = currentUser.avatar;
+
+  // Build Sidebar Menu based on role
+  let menu = '';
+  if (currentUser.role === 'student') {
+    menu = `
+      <li><a onclick="nav('dashboard')" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+      <li><a onclick="nav('profile')" data-page="profile"><i class="fas fa-user"></i> My Profile</a></li>
+      <li><a onclick="nav('projects')" data-page="projects"><i class="fas fa-folder-open"></i> Projects</a></li>
+      <li><a onclick="nav('grades')" data-page="grades"><i class="fas fa-graduation-cap"></i> Grades</a></li>
+      <li><a onclick="nav('achievements')" data-page="achievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+      <li><a onclick="nav('certificates')" data-page="certificates"><i class="fas fa-certificate"></i> Certificates</a></li>
+      <li><a onclick="nav('portfolio')" data-page="portfolio"><i class="fas fa-globe"></i> My Portfolio</a></li>
+      <li><a onclick="nav('feedback')" data-page="feedback"><i class="fas fa-comments"></i> Feedback</a></li>`;
+  } else if (currentUser.role === 'teacher') {
+    menu = `
+      <li><a onclick="nav('dashboard')" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+      <li><a onclick="nav('profile')" data-page="profile"><i class="fas fa-user"></i> My Profile</a></li>
+      <li><a onclick="nav('students')" data-page="students"><i class="fas fa-users"></i> My Students</a></li>
+      <li><a onclick="nav('projects')" data-page="projects"><i class="fas fa-folder-open"></i> Projects</a></li>
+      <li><a onclick="nav('assessments')" data-page="assessments"><i class="fas fa-file-alt"></i> Assessments</a></li>
+      <li><a onclick="nav('feedback')" data-page="feedback"><i class="fas fa-comments"></i> Feedback</a></li>
+      <li><a onclick="nav('reports')" data-page="reports"><i class="fas fa-chart-line"></i> Reports</a></li>`;
+  } else {
+    menu = `
+      <li><a onclick="nav('dashboard')" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+      <li><a onclick="nav('students')" data-page="students"><i class="fas fa-users"></i> Manage Students</a></li>
+      <li><a onclick="nav('teachers')" data-page="teachers"><i class="fas fa-chalkboard-teacher"></i> Manage Teachers</a></li>
+      <li><a onclick="nav('users')" data-page="users"><i class="fas fa-user-cog"></i> Manage Users</a></li>
+      <li><a onclick="nav('projects')" data-page="projects"><i class="fas fa-folder-open"></i> Manage Projects</a></li>
+      <li><a onclick="nav('reports')" data-page="reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+      <li><a onclick="nav('settings')" data-page="settings"><i class="fas fa-cog"></i> Settings</a></li>`;
+  }
+  menu += `<li><a class="logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>`;
+  document.getElementById('sidebarMenu').innerHTML = menu;
+  
+  // Load default dashboard
+  nav('dashboard');
+}
+
+/* ============================
+   DASHBOARD NAVIGATION
+   ============================ */
+function nav(page) {
+  document.querySelectorAll('#sidebarMenu a').forEach(a => a.classList.remove('active'));
+  const link = document.querySelector(`#sidebarMenu a[data-page="${page}"]`);
+  if (link) link.classList.add('active');
+  if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
+
+  const db = DB.get();
+  const c = document.getElementById('content');
+
+  if (currentUser.role === 'student') renderStudent(page, db, c);
+  else if (currentUser.role === 'teacher') renderTeacher(page, db, c);
+  else renderAdmin(page, db, c);
+}
+
+/* ============================
+   STUDENT PAGES
+   ============================ */
+function renderStudent(page, db, c) {
+  const projects = db.projects.filter(p => p.studentId === currentUser.id);
+  const grades = db.grades.filter(g => g.studentId === currentUser.id);
+  const achievements = db.achievements.filter(a => a.studentId === currentUser.id);
+  const certs = db.certificates.filter(x => x.studentId === currentUser.id);
+
+  if (page === 'dashboard') {
+    c.innerHTML = `
+      <h1 class="page-title">Welcome, ${currentUser.name}!</h1>
+      <div class="stats">
+        <div class="stat"><h3>${projects.length}</h3><p>Total Projects</p></div>
+        <div class="stat"><h3>${grades.length}</h3><p>Total Grades</p></div>
+        <div class="stat"><h3>${achievements.length}</h3><p>Achievements</p></div>
+        <div class="stat"><h3>${Math.min(100, (projects.length + grades.length + achievements.length) * 15)}%</h3><p>Portfolio Completion</p></div>
+      </div>
+      <div class="table-wrap">
+        <h3>Recent Activities</h3>
+        <table>
+          <thead><tr><th>Activity</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            ${projects.slice(-2).map(p => `<tr><td>Submitted: ${p.title}</td><td>${p.date}</td><td style="color:var(--green)">Completed</td></tr>`).join('')}
+            ${grades.slice(-1).map(g => `<tr><td>Grade in ${g.subject}: ${g.grade}</td><td>Recent</td><td style="color:var(--blue-light)">New</td></tr>`).join('')}
+            ${projects.length === 0 && grades.length === 0 ? '<tr><td colspan="3" style="text-align:center; color:var(--gray);">No activity yet.</td></tr>' : ''}
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="openModal('project')">+ Add Project</button>
+        <button class="btn-primary" style="background:var(--blue)" onclick="nav('profile')">Update Profile</button>
+        <button class="btn-primary" style="background:var(--orange)" onclick="openModal('achievement')">+ Add Achievement</button>
+        <button class="btn-primary" style="background:var(--purple)" onclick="openModal('certificate')">+ Add Certificate</button>
+      </div>`;
+  }
+  else if (page === 'profile') {
+    c.innerHTML = `
+      <h1 class="page-title">My Profile</h1>
+      <div class="auth-box" style="margin-top:0;">
+        <div style="text-align:center; margin-bottom:1rem;"><img src="${currentUser.avatar}" style="width:90px;height:90px;border-radius:50%;"></div>
+        <form onsubmit="saveProfile(event)">
+          <div class="form-group"><label>Full Name</label><input id="pName" value="${currentUser.name}" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="pEmail" value="${currentUser.email}" required></div>
+          <div class="form-group"><label>Phone</label><input id="pPhone" value="${currentUser.phone || ''}"></div>
+          <div class="form-group"><label>Gender</label>
+            <select id="pGender">
+              <option ${currentUser.gender==='Male'?'selected':''}>Male</option>
+              <option ${currentUser.gender==='Female'?'selected':''}>Female</option>
+              <option ${currentUser.gender==='Other'?'selected':''}>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Class</label><input id="pClass" value="${currentUser.class || ''}"></div>
+          <div class="form-group"><label>About Me</label><textarea id="pAbout" rows="3">${currentUser.about || ''}</textarea></div>
+          <div class="form-group"><label>Skills (comma separated)</label><input id="pSkills" value="${(currentUser.skills || []).join(', ')}"></div>
+          <button class="btn-submit" type="submit">Save Changes</button>
+        </form>
+      </div>`;
+  }
+  else if (page === 'projects') {
+    c.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <h1 class="page-title" style="margin:0;">My Projects</h1>
+        <button class="btn-primary" onclick="openModal('project')">+ Add Project</button>
+      </div>
+      <div class="table-wrap" style="margin-top:1.5rem;">
+        <table>
+          <thead><tr><th>Title</th><th>Category</th><th>Tech</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${projects.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray)">No projects yet.</td></tr>' : ''}
+            ${projects.map(p => `<tr>
+              <td><strong>${p.title}</strong></td><td>${p.category}</td><td>${p.tech}</td><td>${p.date}</td>
+              <td style="color:${p.status==='Published'?'var(--green)':'var(--orange)'}">${p.status}</td>
+              <td>
+                <button class="btn-sm btn-view" onclick="viewProject(${p.id})">View</button>
+                <button class="btn-sm btn-edit" onclick="openModal('project',${p.id})">Edit</button>
+                <button class="btn-sm btn-del" onclick="delItem('projects',${p.id})">Delete</button>
+              </td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'grades') {
+    c.innerHTML = `
+      <h1 class="page-title">My Grades</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Subject</th><th>Score</th><th>Grade</th><th>Semester</th><th>Year</th><th>Comment</th></tr></thead>
+          <tbody>
+            ${grades.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray)">No grades yet.</td></tr>' : ''}
+            ${grades.map(g => `<tr><td>${g.subject}</td><td>${g.score}</td><td><strong>${g.grade}</strong></td><td>${g.semester}</td><td>${g.year}</td><td>${g.comment}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'achievements') {
+    c.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <h1 class="page-title" style="margin:0;">Achievements</h1>
+        <button class="btn-primary" style="background:var(--orange)" onclick="openModal('achievement')">+ Add</button>
+      </div>
+      <div class="grid" style="margin-top:1.5rem;">
+        ${achievements.length === 0 ? '<p style="grid-column:1/-1;text-align:center;color:var(--gray)">No achievements yet.</p>' : ''}
+        ${achievements.map(a => `<div class="card" style="text-align:left;">
+          <img src="${imageMap.achievements}" style="height:120px; object-fit:cover;">
+          <div class="card-body">
+            <i class="fas fa-trophy" style="color:var(--orange)"></i>
+            <h3>${a.title}</h3>
+            <p style="color:var(--gray); font-size:0.9rem; margin:0.5rem 0;">${a.desc}</p>
+            <p style="font-size:0.8rem; color:var(--gray)"><strong>${a.org}</strong> · ${a.date}</p>
+          </div>
+        </div>`).join('')}
+      </div>`;
+  }
+  else if (page === 'certificates') {
+    c.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <h1 class="page-title" style="margin:0;">Certificates</h1>
+        <button class="btn-primary" onclick="openModal('certificate')">+ Add</button>
+      </div>
+      <div class="grid" style="margin-top:1.5rem;">
+        ${certs.length === 0 ? '<p style="grid-column:1/-1;text-align:center;color:var(--gray)">No certificates yet.</p>' : ''}
+        ${certs.map(x => `<div class="card" style="text-align:left;">
+          <img src="${imageMap.certificates}" style="height:120px; object-fit:cover;">
+          <div class="card-body">
+            <i class="fas fa-certificate" style="color:var(--blue-light)"></i>
+            <h3>${x.name}</h3>
+            <p style="font-size:0.85rem; color:var(--gray); margin-top:0.5rem;">Issued by: ${x.org}</p>
+            <p style="font-size:0.8rem; color:var(--gray)">Date: ${x.date}</p>
+          </div>
+        </div>`).join('')}
+      </div>`;
+  }
+  else if (page === 'portfolio') {
+    const fb = db.feedback.filter(f => projects.some(p => p.id === f.projectId));
+    c.innerHTML = `
+      <div class="pf-header" style="background: linear-gradient(rgba(30,58,138,0.9), rgba(30,58,138,0.9)), url('${imageMap.portfolio}') center/cover;">
+        <img src="${currentUser.avatar}" alt="">
+        <h1>${currentUser.name}</h1>
+        <p>${currentUser.class || 'Student'} · ${currentUser.email}</p>
+        <p style="max-width:600px; margin:1rem auto 0;">${currentUser.about || 'No bio provided.'}</p>
+        <button class="btn-primary" style="background:white; color:var(--blue); margin-top:1.5rem;" onclick="window.print()">Print / Download</button>
+      </div>
+      <div class="pf-section"><h2>Skills</h2>
+        <div class="tags">${(currentUser.skills || []).length ? currentUser.skills.map(s => `<span class="tag">${s}</span>`).join('') : '<p style="color:var(--gray)">No skills added.</p>'}</div>
+      </div>
+      <div class="pf-section"><h2>Projects</h2>
+        <div class="grid">
+          ${projects.length === 0 ? '<p style="color:var(--gray)">No projects.</p>' : ''}
+          ${projects.map(p => `<div class="card" style="text-align:left;">
+            <div class="card-body">
+              <h3>${p.title}</h3>
+              <p style="color:var(--gray); font-size:0.9rem; margin:0.5rem 0;">${p.desc}</p>
+              <p style="font-size:0.8rem;"><strong>Tech:</strong> ${p.tech}</p>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="pf-section"><h2>Achievements & Certificates</h2>
+        <div class="grid">
+          ${achievements.map(a => `<div class="card" style="text-align:left; border-left:4px solid var(--orange);"><div class="card-body"><h3>${a.title}</h3><p style="font-size:0.9rem;">${a.desc}</p><p style="font-size:0.8rem; color:var(--gray)">${a.org} · ${a.date}</p></div></div>`).join('')}
+          ${certs.map(x => `<div class="card" style="text-align:left; border-left:4px solid var(--blue-light);"><div class="card-body"><h3>${x.name}</h3><p style="font-size:0.8rem; color:var(--gray)">${x.org} · ${x.date}</p></div></div>`).join('')}
+        </div>
+      </div>
+      <div class="pf-section"><h2>Teacher Feedback</h2>
+        ${fb.length === 0 ? '<p style="color:var(--gray)">No feedback yet.</p>' : fb.map(f => `<div style="background:var(--bg); padding:1rem; border-radius:8px; margin-bottom:0.8rem; border-left:4px solid var(--green);"><p>"${f.comment}"</p><p style="font-size:0.8rem; color:var(--gray); margin-top:0.4rem;">Grade: ${f.grade} · ${f.date}</p></div>`).join('')}
+      </div>`;
+  }
+  else if (page === 'feedback') {
+    const fb = db.feedback.filter(f => projects.some(p => p.id === f.projectId));
+    c.innerHTML = `
+      <h1 class="page-title">Feedback</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Project</th><th>Comment</th><th>Grade</th><th>Date</th></tr></thead>
+          <tbody>
+            ${fb.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--gray)">No feedback received.</td></tr>' : ''}
+            ${fb.map(f => { const p = db.projects.find(x => x.id === f.projectId); return `<tr><td>${p ? p.title : 'Unknown'}</td><td>${f.comment}</td><td><strong>${f.grade}</strong></td><td>${f.date}</td></tr>`; }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+}
+
+/* ============================
+   TEACHER PAGES
+   ============================ */
+function renderTeacher(page, db, c) {
+  const students = db.users.filter(u => u.role === 'student');
+  const projects = db.projects;
+  const feedback = db.feedback;
+
+  if (page === 'dashboard') {
+    c.innerHTML = `
+      <h1 class="page-title">Welcome, ${currentUser.name}!</h1>
+      <div class="stats">
+        <div class="stat" style="border-left-color:var(--orange)"><h3>${students.length}</h3><p>Students</p></div>
+        <div class="stat" style="border-left-color:var(--orange)"><h3>${projects.length}</h3><p>Projects</p></div>
+        <div class="stat" style="border-left-color:var(--orange)"><h3>${projects.filter(p => p.status === 'Pending').length}</h3><p>Pending Reviews</p></div>
+        <div class="stat" style="border-left-color:var(--orange)"><h3>${feedback.length}</h3><p>Feedback Given</p></div>
+      </div>
+      <div class="table-wrap">
+        <h3>Recent Submissions</h3>
+        <table>
+          <thead><tr><th>Student</th><th>Project</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${projects.length === 0 ? '<tr><td colspan="5" style="text-align:center;color:var(--gray)">No submissions.</td></tr>' : ''}
+            ${projects.slice().reverse().map(p => {
+              const s = db.users.find(u => u.id === p.studentId);
+              return `<tr><td>${s ? s.name : 'Unknown'}</td><td>${p.title}</td><td>${p.date}</td>
+                <td style="color:${p.status==='Published'?'var(--green)':'var(--orange)'}">${p.status}</td>
+                <td><button class="btn-sm btn-view" onclick="viewProject(${p.id})">View</button>
+                <button class="btn-sm btn-ok" onclick="openModal('feedback',${p.id})">Review</button></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'students') {
+    c.innerHTML = `
+      <h1 class="page-title">My Students</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Class</th><th>Projects</th><th>Action</th></tr></thead>
+          <tbody>
+            ${students.map(s => {
+              const count = db.projects.filter(p => p.studentId === s.id).length;
+              return `<tr><td>${s.name}</td><td>${s.email}</td><td>${s.class || 'N/A'}</td><td>${count}</td>
+                <td><button class="btn-sm btn-view" onclick="viewStudentPortfolio(${s.id})">View Portfolio</button></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'projects') {
+    c.innerHTML = `
+      <h1 class="page-title">Student Projects</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Project</th><th>Category</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${projects.map(p => {
+              const s = db.users.find(u => u.id === p.studentId);
+              return `<tr><td>${s ? s.name : 'Unknown'}</td><td>${p.title}</td><td>${p.category}</td>
+                <td>${p.status}</td>
+                <td><button class="btn-sm btn-view" onclick="viewProject(${p.id})">View</button>
+                <button class="btn-sm btn-ok" onclick="openModal('feedback',${p.id})">Review</button></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'assessments') {
+    c.innerHTML = `
+      <h1 class="page-title">Assessments & Grades</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Subject</th><th>Score</th><th>Grade</th><th>Semester</th><th>Comment</th></tr></thead>
+          <tbody>
+            ${db.grades.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray)">No assessments.</td></tr>' : ''}
+            ${db.grades.map(g => { const s = db.users.find(u => u.id === g.studentId); return `<tr><td>${s ? s.name : 'Unknown'}</td><td>${g.subject}</td><td>${g.score}</td><td><strong>${g.grade}</strong></td><td>${g.semester}</td><td>${g.comment}</td></tr>`; }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'feedback') {
+    c.innerHTML = `
+      <h1 class="page-title">My Feedback</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Project</th><th>Student</th><th>Comment</th><th>Grade</th><th>Date</th></tr></thead>
+          <tbody>
+            ${feedback.length === 0 ? '<tr><td colspan="5" style="text-align:center;color:var(--gray)">No feedback given yet.</td></tr>' : ''}
+            ${feedback.map(f => {
+              const p = db.projects.find(x => x.id === f.projectId);
+              const s = p ? db.users.find(u => u.id === p.studentId) : null;
+              return `<tr><td>${p ? p.title : 'Unknown'}</td><td>${s ? s.name : 'Unknown'}</td><td>${f.comment}</td><td><strong>${f.grade}</strong></td><td>${f.date}</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'reports') {
+    c.innerHTML = `
+      <h1 class="page-title">Reports</h1>
+      <div class="table-wrap">
+        <h3>Student Performance Overview</h3>
+        <table>
+          <thead><tr><th>Student</th><th>Projects</th><th>Avg Score</th><th>Feedback</th></tr></thead>
+          <tbody>
+            ${students.map(s => {
+              const pc = db.projects.filter(p => p.studentId === s.id).length;
+              const gs = db.grades.filter(g => g.studentId === s.id);
+              const avg = gs.length ? (gs.reduce((a,b) => a + parseFloat(b.score), 0) / gs.length).toFixed(1) : 'N/A';
+              const fc = db.feedback.filter(f => { const p = db.projects.find(x => x.id === f.projectId); return p && p.studentId === s.id; }).length;
+              return `<tr><td>${s.name}</td><td>${pc}</td><td>${avg}</td><td>${fc}</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'profile') {
+    c.innerHTML = `
+      <h1 class="page-title">My Profile</h1>
+      <div class="auth-box" style="margin-top:0;">
+        <form onsubmit="saveProfile(event)">
+          <div class="form-group"><label>Full Name</label><input id="pName" value="${currentUser.name}" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="pEmail" value="${currentUser.email}" required></div>
+          <div class="form-group"><label>Phone</label><input id="pPhone" value="${currentUser.phone || ''}"></div>
+          <div class="form-group"><label>Department</label><input id="pClass" value="${currentUser.dept || ''}"></div>
+          <div class="form-group"><label>About Me</label><textarea id="pAbout" rows="3">${currentUser.about || ''}</textarea></div>
+          <button class="btn-submit" type="submit">Save Changes</button>
+        </form>
+      </div>`;
+  }
+}
+
+/* ============================
+   ADMIN PAGES
+   ============================ */
+function renderAdmin(page, db, c) {
+  const students = db.users.filter(u => u.role === 'student');
+  const teachers = db.users.filter(u => u.role === 'teacher');
+
+  if (page === 'dashboard') {
+    c.innerHTML = `
+      <h1 class="page-title">Admin Dashboard</h1>
+      <div class="stats">
+        <div class="stat" style="border-left-color:var(--purple)"><h3>${students.length}</h3><p>Students</p></div>
+        <div class="stat" style="border-left-color:var(--purple)"><h3>${teachers.length}</h3><p>Teachers</p></div>
+        <div class="stat" style="border-left-color:var(--purple)"><h3>${db.projects.length}</h3><p>Projects</p></div>
+        <div class="stat" style="border-left-color:var(--purple)"><h3>4</h3><p>Classes</p></div>
+      </div>
+      <div class="table-wrap">
+        <h3>Recent System Activity</h3>
+        <table>
+          <thead><tr><th>User</th><th>Action</th><th>Date</th></tr></thead>
+          <tbody>
+            <tr><td>Jane Student</td><td>Submitted new project</td><td>Just now</td></tr>
+            <tr><td>John Teacher</td><td>Gave feedback</td><td>5 mins ago</td></tr>
+            <tr><td>Admin User</td><td>Added new class</td><td>1 hour ago</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+        <button class="btn-primary" style="background:var(--purple)" onclick="alert('Add Student feature (demo).')">+ Add Student</button>
+        <button class="btn-primary" style="background:var(--purple)" onclick="alert('Add Teacher feature (demo).')">+ Add Teacher</button>
+        <button class="btn-primary" style="background:var(--purple)" onclick="nav('reports')">View Reports</button>
+      </div>`;
+  }
+  else if (page === 'students' || page === 'teachers' || page === 'users') {
+    let list, title;
+    if (page === 'students') { list = students; title = 'Manage Students'; }
+    else if (page === 'teachers') { list = teachers; title = 'Manage Teachers'; }
+    else { list = db.users; title = 'Manage Users'; }
+    c.innerHTML = `
+      <h1 class="page-title">${title}</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${list.map(u => `<tr>
+              <td>${u.id}</td><td>${u.name}</td><td>${u.email}</td>
+              <td><span class="role-badge ${u.role}" style="font-size:0.65rem; padding:0.15rem 0.5rem">${u.role}</span></td>
+              <td>
+                <button class="btn-sm btn-edit" onclick="alert('Edit user (demo).')">Edit</button>
+                <button class="btn-sm btn-del" onclick="delItem('users',${u.id})">Delete</button>
+              </td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'projects') {
+    c.innerHTML = `
+      <h1 class="page-title">Manage Projects</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${db.projects.map(p => {
+              const s = db.users.find(u => u.id === p.studentId);
+              return `<tr><td>${s ? s.name : 'Unknown'}</td><td>${p.title}</td><td>${p.category}</td><td>${p.status}</td>
+                <td><button class="btn-sm btn-view" onclick="viewProject(${p.id})">View</button>
+                <button class="btn-sm btn-del" onclick="delItem('projects',${p.id})">Delete</button></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'reports') {
+    c.innerHTML = `
+      <h1 class="page-title">System Reports</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Total Students</td><td>${students.length}</td></tr>
+            <tr><td>Total Teachers</td><td>${teachers.length}</td></tr>
+            <tr><td>Total Projects</td><td>${db.projects.length}</td></tr>
+            <tr><td>Total Achievements</td><td>${db.achievements.length}</td></tr>
+            <tr><td>Total Certificates</td><td>${db.certificates.length}</td></tr>
+            <tr><td>Total Feedback</td><td>${db.feedback.length}</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+  }
+  else if (page === 'settings') {
+    c.innerHTML = `
+      <h1 class="page-title">System Settings</h1>
+      <div class="auth-box" style="margin-top:0;">
+        <div class="form-group"><label>Site Name</label><input value="School Portfolio System"></div>
+        <div class="form-group"><label>Admin Email</label><input value="admin@school.com"></div>
+        <div class="form-group"><label>Allow Registrations</label>
+          <select><option>Yes</option><option>No</option></select>
+        </div>
+        <button class="btn-submit" onclick="alert('Settings saved (demo).')">Save Settings</button>
+      </div>`;
+  }
+}
+
+/* ============================
+   MODALS / CRUD
+   ============================ */
+function openModal(type, id) {
+  const db = DB.get();
+  const modal = document.getElementById('modal');
+  const title = document.getElementById('modalTitle');
+  const body = document.getElementById('modalBody');
+  modal.classList.add('active');
+
+  if (type === 'project') {
+    title.textContent = id ? 'Edit Project' : 'Add New Project';
+    let p = { title: '', desc: '', category: '', tech: '', date: new Date().toISOString().split('T')[0] };
+    if (id) p = db.projects.find(x => x.id === id);
+    body.innerHTML = `<form onsubmit="saveProject(event,${id || 0})">
+      <div class="form-group"><label>Title</label><input id="prTitle" value="${p.title}" required></div>
+      <div class="form-group"><label>Description</label><textarea id="prDesc" rows="3" required>${p.desc}</textarea></div>
+      <div class="form-group"><label>Category</label><input id="prCat" value="${p.category}" required></div>
+      <div class="form-group"><label>Technologies</label><input id="prTech" value="${p.tech}" required></div>
+      <div class="form-group"><label>Date</label><input type="date" id="prDate" value="${p.date}" required></div>
+      <button class="btn-submit" type="submit">Save Project</button>
+    </form>`;
+  }
+  else if (type === 'achievement') {
+    title.textContent = 'Add Achievement';
+    body.innerHTML = `<form onsubmit="saveAchievement(event)">
+      <div class="form-group"><label>Title</label><input id="aTitle" required></div>
+      <div class="form-group"><label>Description</label><textarea id="aDesc" rows="3" required></textarea></div>
+      <div class="form-group"><label>Organization</label><input id="aOrg" required></div>
+      <div class="form-group"><label>Date</label><input type="date" id="aDate" required></div>
+      <button class="btn-submit" type="submit">Save</button>
+    </form>`;
+  }
+  else if (type === 'certificate') {
+    title.textContent = 'Add Certificate';
+    body.innerHTML = `<form onsubmit="saveCertificate(event)">
+      <div class="form-group"><label>Certificate Name</label><input id="cName" required></div>
+      <div class="form-group"><label>Issuing Organization</label><input id="cOrg" required></div>
+      <div class="form-group"><label>Date Issued</label><input type="date" id="cDate" required></div>
+      <button class="btn-submit" type="submit">Save</button>
+    </form>`;
+  }
+  else if (type === 'feedback') {
+    title.textContent = 'Give Feedback';
+    body.innerHTML = `<form onsubmit="saveFeedback(event,${id})">
+      <div class="form-group"><label>Comment</label><textarea id="fbComment" rows="4" required></textarea></div>
+      <div class="form-group"><label>Grade</label><input id="fbGrade" placeholder="e.g., A, B+" required></div>
+      <button class="btn-submit" type="submit">Submit Feedback</button>
+    </form>`;
+  }
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+function saveProject(e, id) {
+  e.preventDefault();
+  const db = DB.get();
+  const data = {
+    title: document.getElementById('prTitle').value,
+    desc: document.getElementById('prDesc').value,
+    category: document.getElementById('prCat').value,
+    tech: document.getElementById('prTech').value,
+    date: document.getElementById('prDate').value
+  };
+  if (id) {
+    const i = db.projects.findIndex(p => p.id === id);
+    db.projects[i] = { ...db.projects[i], ...data };
+  } else {
+    data.id = Date.now();
+    data.studentId = currentUser.id;
+    data.status = 'Pending';
+    db.projects.push(data);
+  }
+  DB.save(); closeModal(); nav('projects');
+}
+
+function saveAchievement(e) {
+  e.preventDefault();
+  const db = DB.get();
+  db.achievements.push({
+    id: Date.now(), studentId: currentUser.id,
+    title: document.getElementById('aTitle').value,
+    desc: document.getElementById('aDesc').value,
+    org: document.getElementById('aOrg').value,
+    date: document.getElementById('aDate').value
+  });
+  DB.save(); closeModal(); nav('achievements');
+}
+
+function saveCertificate(e) {
+  e.preventDefault();
+  const db = DB.get();
+  db.certificates.push({
+    id: Date.now(), studentId: currentUser.id,
+    name: document.getElementById('cName').value,
+    org: document.getElementById('cOrg').value,
+    date: document.getElementById('cDate').value
+  });
+  DB.save(); closeModal(); nav('certificates');
+}
+
+function saveFeedback(e, projectId) {
+  e.preventDefault();
+  const db = DB.get();
+  db.feedback.push({
+    id: Date.now(), projectId, teacherId: currentUser.id,
+    comment: document.getElementById('fbComment').value,
+    grade: document.getElementById('fbGrade').value,
+    date: new Date().toISOString().split('T')[0]
+  });
+  const p = db.projects.find(x => x.id === projectId);
+  if (p) p.status = 'Reviewed';
+  DB.save(); closeModal(); nav('dashboard');
+}
+
+function delItem(table, id) {
+  if (!confirm('Delete this item?')) return;
+  const db = DB.get();
+  db[table] = db[table].filter(x => x.id !== id);
+  DB.save();
+  nav(table === 'users' ? 'students' : table);
+}
+
+function saveProfile(e) {
+  e.preventDefault();
+  const db = DB.get();
+  const i = db.users.findIndex(u => u.id === currentUser.id);
+  if (i > -1) {
+    db.users[i].name = document.getElementById('pName').value;
+    db.users[i].email = document.getElementById('pEmail').value;
+    db.users[i].phone = document.getElementById('pPhone').value;
+    if (document.getElementById('pGender')) db.users[i].gender = document.getElementById('pGender').value;
+    if (document.getElementById('pClass')) {
+      if (currentUser.role === 'student') db.users[i].class = document.getElementById('pClass').value;
+      else db.users[i].dept = document.getElementById('pClass').value;
+    }
+    db.users[i].about = document.getElementById('pAbout').value;
+    if (document.getElementById('pSkills')) {
+      db.users[i].skills = document.getElementById('pSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    currentUser = db.users[i];
+    DB.save();
+    alert('Profile updated!');
+    enterDashboard();
+  }
+}
+
+/* ============================
+   UTILITIES
+   ============================ */
+function viewProject(id) {
+  const p = DB.get().projects.find(x => x.id === id);
+  if (p) alert(`Project: ${p.title}\n\nDescription: ${p.desc}\nCategory: ${p.category}\nTechnologies: ${p.tech}\nDate: ${p.date}\nStatus: ${p.status}`);
+}
+
+function viewStudentPortfolio(id) {
+  const s = DB.get().users.find(u => u.id === id);
+  if (s) alert(`Portfolio of ${s.name}\n\nClass: ${s.class}\nAbout: ${s.about}\nSkills: ${(s.skills || []).join(', ')}`);
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('dashView').classList.add('hidden');
+  document.getElementById('publicView').classList.remove('hidden');
+  showHome();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('active');
+}
+
+function filterTables() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('#content table tbody tr').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// Initialize Home
+showHome();
+</script>
+</body>
+</html>
